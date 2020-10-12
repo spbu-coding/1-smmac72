@@ -9,7 +9,7 @@ double func(double x)
     return sin(x);
 }
 
-double riemann(int n, double a, double b)
+double CountRiemann(int n, double a, double b)
 {
     double s = (func(a) + func(b)) / 2;
     double height = (b-a) / n;
@@ -19,7 +19,7 @@ double riemann(int n, double a, double b)
     return height * s;
 }
 
-double simpson(int n, double a, double b)
+double CountSimpson(int n, double a, double b)
 {
     double x = 0.0;
     double simpson_integral = 0.0;
@@ -39,7 +39,7 @@ double simpson(int n, double a, double b)
     return simpson_integral * x / 3;
 }
 
-void FreeArray(char **arr, int len)
+void FreeArray(char **arr, unsigned int len)
 {
     for (int i = 0; i < len; ++i)
     {
@@ -98,7 +98,7 @@ int ReadVals(double *a, double *b)
     return 1;
 }
 
-char **process(int arr[], double a, double b, const int LEN)
+char **CountAllSquares(int arr[], double a, double b, const unsigned int LEN)
 {
     char **out = (char **) malloc(sizeof(char *) * LEN);
     if (!out)
@@ -115,7 +115,7 @@ char **process(int arr[], double a, double b, const int LEN)
             ERROR("Can't allocate memory for out[%d]\n", i);
             return NULL;
         }
-        if (!sprintf(out[i], "%d %.5f %.5f", arr[i], riemann(arr[i], a, b), simpson(arr[i], a, b)))
+        if (!sprintf(out[i], "%d %.5f %.5f", arr[i], CountRiemann(arr[i], a, b), CountSimpson(arr[i], a, b)))
         {
             ERROR("Can't write string to out[%d]\n", i);
             return NULL;
@@ -126,23 +126,19 @@ char **process(int arr[], double a, double b, const int LEN)
 
 int main()
 {
-    const int LEN = 6;
     int arr[] = {6, 10, 20, 100, 500, 1000};
-
+    unsigned int LEN = (unsigned int)(sizeof(arr)/sizeof(arr[0]));
     double a, b;
     if (ReadVals(&a, &b) == 1)
     {
-        char **out = process(arr, a, b, LEN);
-        for(int i = 0; i < LEN; i++)
+        char **out = CountAllSquares(arr, a, b, LEN);
+        for(unsigned int i = 0; i < LEN; i++)
         {
             printf("%s\n", out[i]);
         }
-        free(arr);
-        FreeArray(out, LEN);
     }
     else
     {
-        free(arr);
         return 1;
     }
     return 0;
